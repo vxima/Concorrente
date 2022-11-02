@@ -52,7 +52,7 @@ func client_time() time.Duration {
 }
 
 func client_incoming() time.Duration {
-	rng := 5 + rand.Intn(10)
+	rng := rand.Intn(20)
 	return time.Duration(rng) * time.Second
 }
 
