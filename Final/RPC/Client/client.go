@@ -36,31 +36,32 @@ func client_time() time.Duration {
 	rng := rand.Intn(10)
 	return time.Duration(rng) * time.Second
 }
+
+func client_request(i int, reply int, conn *rpc.Client) {
+	client := NewClient(i)
+	args := &Args{client.ID, client.time}
+	err := conn.Call("Client.NewClientRPC", args, &reply)
+	if err != nil {
+		log.Fatal("ID error:", err)
+	}
+	wg.Done()
+}
 func main() {
 	fmt.Println("Clients start coming")
-	//qntdClients := 1
-	/*for i := 1; i <= qntdClients; i++ {
-		client := NewClient(i)
-	}*/
+
 	conn, err := rpc.DialHTTP("tcp", "localhost:8080")
 	if err != nil {
 		log.Fatal("Connectiong:", err)
 	}
 	fmt.Println("Connection Successfully")
-	//Create client and args
 
 	var reply int
+	ClientsInDay := 20
 	// call method from server
-
-	// Print reply from server
-	// put in the queue
-	for i := 0; i < 20; i++ {
-		client := NewClient(i)
-		args := &Args{client.ID, client.time}
-		err = conn.Call("Client.NewClientRPC", args, &reply)
-		if err != nil {
-			log.Fatal("ID error:", err)
-		}
+	for i := 0; i < ClientsInDay; i++ {
+		wg.Add(1)
+		go client_request(i, reply, conn)
 	}
+	wg.Wait()
 
 }
