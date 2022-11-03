@@ -47,15 +47,20 @@ func main() {
 		log.Fatal("Connectiong:", err)
 	}
 	fmt.Println("Connection Successfully")
-	//Synchronus call
-	client := NewClient(1)
-	args := &Args{client.ID, client.time}
+	//Create client and args
+
 	var reply int
-	// call
-	err = conn.Call("Client.GiveClientID", args, &reply)
-	if err != nil {
-		log.Fatal("ID error:", err)
+	// call method from server
+
+	// Print reply from server
+	// put in the queue
+	for i := 0; i < 20; i++ {
+		client := NewClient(i)
+		args := &Args{client.ID, client.time}
+		err = conn.Call("Client.NewClientRPC", args, &reply)
+		if err != nil {
+			log.Fatal("ID error:", err)
+		}
 	}
-	fmt.Printf("Client info: {%d ,%d} , received= %d\n", args.ID, args.time, reply)
 
 }
