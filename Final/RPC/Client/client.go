@@ -21,10 +21,7 @@ type Client struct {
 }
 
 func NewClient(id int) Client {
-	//incoming := client_incoming()
-	tmp := client_time()
-
-	//time.Sleep(incoming) // waits to make a new client
+	tmp := client_time() //create a random duration of the consume of the client
 	c := Client{
 		ID:   id,
 		time: tmp,

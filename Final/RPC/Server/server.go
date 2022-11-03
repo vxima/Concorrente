@@ -21,16 +21,16 @@ type Args struct {
 	time time.Duration
 }
 
-// Client
+// Client struct and method
 type Client struct {
 	ID   int
 	time time.Duration
 }
 
 func (c *Client) NewClientRPC(args *Args, reply *int) error {
-	*reply = args.ID
-	cli := Client{ID: args.ID, time: args.time}
-	waiting.push(cli)
+	*reply = args.ID                            //reply is the response to the client.go
+	cli := Client{ID: args.ID, time: args.time} //transforms the args passed in a client
+	waiting.push(cli)                           // puts the client in the queue
 	return nil
 }
 
@@ -56,11 +56,11 @@ func (q *Queue) pop() Client {
 	return x
 }
 
-func client_consuming(c Client) {
+func client_consuming(c Client) { //sleep the goroutine to simulate the client consuming
 	defer wg.Done()
 	time.Sleep(c.time)
 	fmt.Printf("Client %d has finished\n", c.ID)
-	t_size -= 1
+	t_size -= 1 // client leaves the table
 
 }
 
@@ -70,14 +70,14 @@ func Managing() {
 	for {
 		if t_size == 5 {
 			fmt.Println("Full Table!")
-			wg.Wait()
+			wg.Wait() //wait all clients to finish
 			fmt.Println("Group of friends leaving")
 		} else if waiting.size > 0 {
 			wg.Add(1)
-			c := waiting.pop()
+			c := waiting.pop() //client in the waiting queue go to the table
 			fmt.Printf("Entering client %d\n", c.ID)
-			t_size += 1
-			go client_consuming(c)
+			t_size += 1            //increment the table size
+			go client_consuming(c) //client starts consuming
 		}
 	}
 
@@ -103,5 +103,6 @@ func main() {
 		http.Serve(l, nil)
 	}()
 	go Managing()
-	select {}
+	select {} //this select is to run simultaneously both http.serve() and Managing()
+
 }
