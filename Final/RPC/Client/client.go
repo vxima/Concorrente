@@ -57,7 +57,7 @@ func main() {
 	var reply int
 	ClientsInDay := 20 //determines the quantity of clients that we go
 	// call method from server
-	fmt.Println("Clients start coming")
+	fmt.Println("Clients start coming!")
 	for i := 1; i <= ClientsInDay; i++ {
 		wg.Add(1)
 		go client_request(i, reply, conn)
