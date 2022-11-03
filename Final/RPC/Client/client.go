@@ -58,7 +58,7 @@ func main() {
 	var reply int
 	ClientsInDay := 20
 	// call method from server
-	for i := 0; i < ClientsInDay; i++ {
+	for i := 1; i <= ClientsInDay; i++ {
 		wg.Add(1)
 		go client_request(i, reply, conn)
 	}
