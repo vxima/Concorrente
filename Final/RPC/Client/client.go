@@ -21,7 +21,9 @@ type Client struct {
 }
 
 func NewClient(id int) Client {
+	incoming := client_incoming()
 	tmp := client_time() //create a random duration of the consume of the client
+	time.Sleep(incoming)
 	c := Client{
 		ID:   id,
 		time: tmp,
@@ -33,6 +35,10 @@ func client_time() time.Duration {
 	rng := rand.Intn(10)
 	return time.Duration(rng) * time.Second
 }
+func client_incoming() time.Duration {
+	rng := rand.Intn(10)
+	return time.Duration(rng) * time.Second
+}
 
 func client_request(i int, reply int, conn *rpc.Client) {
 	client := NewClient(i)
@@ -41,6 +47,7 @@ func client_request(i int, reply int, conn *rpc.Client) {
 	if err != nil {
 		log.Fatal("ID error:", err)
 	}
+	fmt.Printf("Client %d has entered the waiting queue\n", reply)
 	wg.Done()
 }
 func main() {
@@ -52,7 +59,7 @@ func main() {
 	fmt.Println("Connection Successfully")
 
 	var reply int
-	ClientsInDay := 20 //determines the quantity of clients that we go
+	ClientsInDay := 5 //determines the quantity of clients that we go
 	// call method from server
 	fmt.Println("Clients start coming!")
 	for i := 1; i <= ClientsInDay; i++ {
