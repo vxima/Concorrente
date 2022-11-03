@@ -69,7 +69,7 @@ func Managing() {
 	//while(1)
 	for {
 		if t_size == 5 {
-			fmt.Println("Full Table")
+			fmt.Println("Full Table!")
 			wg.Wait()
 			fmt.Println("Group of friends leaving")
 		} else if waiting.size > 0 {
@@ -83,7 +83,7 @@ func Managing() {
 
 }
 func main() {
-	// Create instances
+	// Create instance
 	client := new(Client)
 	// Register
 	rpc.Register(client)
@@ -94,7 +94,11 @@ func main() {
 		log.Fatal("listen error:", e)
 	}
 	fmt.Println("Listening in port 8080")
+	// Two goroutines running:
+	// 1) http.Serve() reads the request from the clients
 
+	// 2) Managing() is an infinity loop thats gets the clients in the waiting queue
+	// and manages the table with the time consuming of each client
 	go func() {
 		http.Serve(l, nil)
 	}()

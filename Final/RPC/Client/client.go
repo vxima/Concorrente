@@ -47,8 +47,7 @@ func client_request(i int, reply int, conn *rpc.Client) {
 	wg.Done()
 }
 func main() {
-	fmt.Println("Clients start coming")
-
+	// Connect with the server
 	conn, err := rpc.DialHTTP("tcp", "localhost:8080")
 	if err != nil {
 		log.Fatal("Connectiong:", err)
@@ -56,8 +55,9 @@ func main() {
 	fmt.Println("Connection Successfully")
 
 	var reply int
-	ClientsInDay := 20
+	ClientsInDay := 20 //determines the quantity of clients that we go
 	// call method from server
+	fmt.Println("Clients start coming")
 	for i := 1; i <= ClientsInDay; i++ {
 		wg.Add(1)
 		go client_request(i, reply, conn)
